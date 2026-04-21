@@ -195,7 +195,7 @@ const Login = () => {
                         href="#"
                         className="text-xs font-medium text-primary hover:text-primary/90 transition-colors"
                       >
-                        Forgot?
+                        Forgot Password ?
                       </a>
                     </div>
                     <div className="relative">
