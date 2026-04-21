@@ -79,7 +79,7 @@ export default function Bookings() {
               <Badge
                 variant="secondary"
                 className={`ml-0.5 h-4 px-1.5 text-[10px] ${
-                  statusFilter === s ? "bg-white/20 text-white" : "bg-muted text-muted-foreground"
+                  statusFilter === s ? "bg-white text-black dark:bg-black dark:text-white" : "bg-primary/10 text-primary"
                 }`}
               >
                 {getCounts(s)}
