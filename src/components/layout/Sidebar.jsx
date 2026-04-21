@@ -101,7 +101,7 @@ export default function Sidebar({ open, onClose }) {
                     className={cn(
                       "h-5 px-1.5 text-[10px]",
                       isActive
-                        ? "bg-white/20 text-white hover:bg-white/20"
+                        ? "bg-white/30 text-black hover:bg-white/30"
                         : "bg-primary/10 text-primary hover:bg-primary/10"
                     )}
                   >
