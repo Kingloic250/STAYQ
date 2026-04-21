@@ -38,7 +38,7 @@ const Login = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
-  const logoSrc = theme === "dark" ? "/src/assets/logow.png" : "/src/assets/logod.png";
+  const logoSrc = theme === "dark" ? "/logow.png" : "/logod.png";
 
   const handleSocial = (provider) => {
     setLoading(provider);
