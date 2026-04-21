@@ -22,8 +22,15 @@ export const ThemeProvider = ({ children }) => {
     // Save theme to localStorage
     localStorage.setItem('theme', theme);
     
-    // Apply theme to document root
-    document.documentElement.classList.toggle('dark', theme === 'dark');
+    // Apply theme to document root element
+    const root = document.documentElement;
+    if (theme === 'dark') {
+      root.classList.add('dark');
+      root.style.colorScheme = 'dark';
+    } else {
+      root.classList.remove('dark');
+      root.style.colorScheme = 'light';
+    }
   }, [theme]);
 
   return (

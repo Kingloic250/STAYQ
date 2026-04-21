@@ -1,7 +1,16 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
     darkMode: ["class"],
-    content: ["./index.html", "./src/**/*.{ts,tsx,js,jsx}"],
+    content: [
+      "./index.html",
+      "./src/**/*.{ts,tsx,js,jsx}",
+      "./pages/**/*.{ts,tsx,js,jsx}"
+    ],
+    corePlugins: {
+      // Disable any utilities that might conflict with shadcn UI
+      preflight: true,
+    },
+    important: false,
   theme: {
   	extend: {
   		fontFamily: {

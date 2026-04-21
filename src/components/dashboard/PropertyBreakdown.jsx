@@ -1,25 +1,23 @@
 import { properties } from "@/lib/mockData";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { motion } from "framer-motion";
+import { useState } from "react";
+import ReactECharts from "echarts-for-react";
 
 const STATUSES = [
-  { key: "Available", color: "#10b981", bg: "bg-emerald-500" },
-  { key: "Occupied",  color: "#3b82f6", bg: "bg-blue-500" },
-  { key: "Maintenance", color: "#f59e0b", bg: "bg-amber-400" },
+  { key: "Available", color: "#10b981" },
+  { key: "Occupied", color: "#8b5cf6" },
+  { key: "Maintenance", color: "#f59e0b" },
 ];
 
-const CustomTooltip = ({ active, payload }) => {
-  if (!active || !payload?.length) return null;
-  const data = payload[0].payload;
-  return (
-    <div className="bg-card border border-border rounded-lg shadow-lg px-3 py-2">
-      <p className="font-semibold">{data.name}</p>
-      <p className="text-sm text-muted-foreground">{data.value} properties ({data.pct}%)</p>
-    </div>
-  );
-};
+const CHART_COLORS = [
+  "#8b5cf6", // Violet
+  "#06b6d4", // Cyan  
+  "#f43f5e", // Rose
+];
 
 export default function PropertyBreakdown() {
+  const [hoveredStatus, setHoveredStatus] = useState(null);
   const total = properties.length;
 
   const counts = STATUSES.map(s => ({
@@ -29,65 +27,151 @@ export default function PropertyBreakdown() {
     name: s.key,
   })).filter(s => s.value > 0);
 
-  const chartData = counts.map(s => ({ name: s.key, value: s.value, pct: s.pct, fill: s.color }));
+  const chartData = counts.map((s, index) => ({
+    value: s.value,
+    name: s.key,
+    itemStyle: { color: CHART_COLORS[index % CHART_COLORS.length] },
+    pct: s.pct,
+  }));
+
+  const option = {
+    tooltip: {
+      trigger: 'item',
+      backgroundColor: 'rgba(0, 0, 0, 0.75)',
+      borderColor: '#333',
+      textStyle: {
+        color: '#fff',
+        fontSize: 12,
+      },
+      formatter: (params) => {
+        if (params.componentSubType === 'pie') {
+          return `<strong>${params.name}</strong><br/>${params.value} properties<br/><strong>${params.percent}%</strong>`;
+        }
+      },
+    },
+    series: [
+      {
+        type: 'pie',
+        radius: ['45%', '75%'],
+        center: ['50%', '50%'],
+        data: chartData,
+        emphasis: {
+          scaleSize: 10,
+          itemStyle: {
+            borderColor: '#fff',
+            borderWidth: 2,
+            shadowColor: 'rgba(0, 0, 0, 0.3)',
+            shadowBlur: 10,
+          },
+        },
+        itemStyle: {
+          borderRadius: [8, 8],
+          borderColor: 'hsl(var(--background))',
+          borderWidth: 3,
+        },
+        animationType: 'scale',
+        animationEasing: 'cubicOut',
+        animationDuration: 800,
+        label: {
+          show: false,
+        },
+      },
+    ],
+  };
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.08,
+        delayChildren: 0.3,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, x: -20 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: { type: "spring", stiffness: 100 },
+    },
+  };
 
   return (
-    <Card>
+    <Card className="overflow-hidden">
       <CardHeader className="pb-2">
         <CardTitle className="text-base">Property Status</CardTitle>
         <CardDescription>Breakdown of {total} properties</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="flex flex-col sm:flex-row items-center gap-6">
-            <div className="relative w-40 h-40 shrink-0">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={chartData}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={45}
-                    outerRadius={70}
-                    paddingAngle={3}
-                    dataKey="value"
-                    labelLine={false}
-                    label={{ position: 'inside' }}
-                  >
-                    {chartData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.fill} />
-                    ))}
-                  </Pie>
-                  <Tooltip content={<CustomTooltip />} />
-                </PieChart>
-              </ResponsiveContainer>
-              <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                <span className="text-2xl font-bold">{total}</span>
-                <span className="text-xs text-muted-foreground">Total</span>
-              </div>
-            </div>
+        <div className="flex flex-col lg:flex-row items-center gap-8">
+          {/* Modern ECharts Pie Chart */}
+          <motion.div 
+            className="w-full lg:w-80 h-80 flex-shrink-0"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6 }}
+          >
+            <ReactECharts 
+              option={option}
+              style={{ height: '100%', width: '100%' }}
+              opts={{ renderer: 'svg' }}
+            />
+          </motion.div>
 
-          <div className="flex-1 w-full space-y-4">
+          {/* Modern Legend */}
+          <motion.div 
+            className="flex-1 w-full space-y-4"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+          >
             {counts.map((s) => (
-              <div key={s.key} className="space-y-2">
-                <div className="flex items-center justify-between text-sm">
-                  <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: s.color }} />
-                    <span className="text-foreground font-medium">{s.key}</span>
+              <motion.div
+                key={s.key}
+                variants={itemVariants}
+                onMouseEnter={() => setHoveredStatus(s.key)}
+                onMouseLeave={() => setHoveredStatus(null)}
+                className="group cursor-pointer"
+              >
+                <div className="space-y-2 p-4 rounded-lg transition-all duration-300 hover:bg-muted/60 hover:shadow-sm border border-transparent hover:border-border">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <motion.div 
+                        className="w-5 h-5 rounded-md shrink-0 shadow-lg"
+                      style={{ backgroundColor: CHART_COLORS[counts.indexOf(s) % CHART_COLORS.length] }}
+                        whileHover={{ scale: 1.15, rotate: 5 }}
+                        whileTap={{ scale: 0.9 }}
+                      />
+                      <span className="text-base font-semibold text-foreground">{s.key}</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <motion.div 
+                        className="text-right"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                      >
+                        <div className="font-bold text-lg">{s.value}</div>
+                        <div className="text-sm font-bold text-foreground/60">{s.pct}%</div>
+                      </motion.div>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="font-semibold">{s.value}</span>
-                    <span className="text-xs text-muted-foreground">({s.pct}%)</span>
+                  {/* Enhanced progress bar */}
+                  <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
+                    <motion.div
+                      className="h-full rounded-full"
+                      style={{ backgroundColor: CHART_COLORS[counts.indexOf(s) % CHART_COLORS.length] }}
+                      initial={{ width: 0 }}
+                      animate={{ width: `${s.pct}%` }}
+                      transition={{ delay: 0.1, duration: 1, ease: "easeOut" }}
+                    />
                   </div>
                 </div>
-                <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
-                  <div
-                    className="h-full rounded-full transition-all duration-500"
-                    style={{ width: `${s.pct}%`, backgroundColor: s.color }}
-                  />
-                </div>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </CardContent>
     </Card>
