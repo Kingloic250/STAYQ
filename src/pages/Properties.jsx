@@ -13,6 +13,20 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { motion } from "framer-motion";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.05, delayChildren: 0.1 },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100 } },
+};
 import { Plus, Eye, Pencil, MapPin } from "lucide-react";
 
 const ITEMS_PER_PAGE = 5;
@@ -48,8 +62,13 @@ export default function Properties() {
 
   return (
     <TooltipProvider>
-      <div className="space-y-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <motion.div 
+        className="space-y-6"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <motion.div variants={itemVariants} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold tracking-tight">Properties</h1>
             <p className="text-muted-foreground text-sm mt-1">
@@ -60,9 +79,10 @@ export default function Properties() {
             <Plus className="w-4 h-4 mr-2" />
             Add Property
           </Button>
-        </div>
+        </motion.div>
 
-        <Card>
+        <motion.div variants={itemVariants}>
+          <Card>
           <CardHeader className="pb-3">
             <div className="flex flex-col sm:flex-row gap-3">
               <DataTableSearch value={search} onChange={(v) => { setSearch(v); setPage(1); }} placeholder="Search properties..." />
@@ -153,7 +173,8 @@ export default function Properties() {
               />
             </div>
           </CardContent>
-        </Card>
+          </Card>
+        </motion.div>
 
         <PropertyForm
           open={formOpen}
@@ -162,7 +183,7 @@ export default function Properties() {
           onSave={handleSave}
         />
         <PropertyDetailModal open={!!detailProperty} onClose={() => setDetailProperty(null)} property={detailProperty} />
-      </div>
+      </motion.div>
     </TooltipProvider>
   );
 }

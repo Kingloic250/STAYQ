@@ -8,6 +8,17 @@ import UserProfileModal from "@/components/users/UserProfileModal";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { motion } from "framer-motion";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.05, delayChildren: 0.1 } },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100 } },
+};
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -49,13 +60,19 @@ export default function Users() {
 
   return (
     <TooltipProvider>
-      <div className="space-y-6">
-        <div>
+      <motion.div 
+        className="space-y-6"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <motion.div variants={itemVariants}>
           <h1 className="text-2xl font-bold tracking-tight">Users</h1>
           <p className="text-muted-foreground text-sm mt-1">Manage platform users</p>
-        </div>
+        </motion.div>
 
-        <Card>
+        <motion.div variants={itemVariants}>
+          <Card>
           <CardHeader className="pb-3">
             <div className="flex flex-col sm:flex-row gap-3">
               <DataTableSearch value={search} onChange={(v) => { setSearch(v); setPage(1); }} placeholder="Search users..." />
@@ -151,10 +168,11 @@ export default function Users() {
               />
             </div>
           </CardContent>
-        </Card>
+          </Card>
+        </motion.div>
 
         <UserProfileModal open={!!selectedUser} onClose={() => setSelectedUser(null)} user={selectedUser} />
-      </div>
+      </motion.div>
     </TooltipProvider>
   );
 }

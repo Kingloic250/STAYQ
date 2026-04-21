@@ -3,6 +3,20 @@ import { useSearchParams } from "react-router-dom";
 import { User, Bell, Shield, Palette, Globe, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/lib/ThemeContext";
+import { motion } from "framer-motion";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1, delayChildren: 0.2 },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100 } },
+};
 
 const sections = [
   { id: "profile", label: "Profile", icon: User },
@@ -151,8 +165,8 @@ function AppearanceSection() {
       </div>
       <div>
         <p className="text-[12px] font-medium text-muted-foreground mb-3">Theme</p>
-        <div className="grid grid-cols-3 gap-3">
-          {["light", "dark", "system"].map((t) => (
+        <div className="grid grid-cols-2 gap-3">
+          {["light", "dark"].map((t) => (
             <button
               key={t}
               onClick={() => setTheme(t)}
@@ -219,18 +233,25 @@ export default function Settings() {
   };
 
   return (
-    <div className="max-w-5xl">
-      <div className="mb-8">
+    <motion.div 
+      className="max-w-5xl"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      <motion.div className="mb-8" variants={itemVariants}>
         <h1 className="text-[28px] font-semibold text-foreground tracking-tight mb-1">Settings</h1>
         <p className="text-[14px] text-muted-foreground">Manage your account and preferences</p>
-      </div>
-      <div className="flex gap-6">
+      </motion.div>
+      <motion.div className="flex gap-6" variants={itemVariants}>
         <div className="w-52 shrink-0">
           <nav className="space-y-1">
             {sections.map((s) => (
-              <button
+              <motion.button
                 key={s.id}
                 onClick={() => handleSectionChange(s.id)}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
                 className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-[13px] font-medium transition-all ${
                   active === s.id
                     ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
@@ -239,14 +260,14 @@ export default function Settings() {
               >
                 <s.icon className="w-4 h-4" />
                 {s.label}
-              </button>
+              </motion.button>
             ))}
           </nav>
         </div>
-        <div className="flex-1 bg-card border border-border rounded-2xl p-6 min-h-[400px]">
+        <motion.div className="flex-1 bg-card border border-border rounded-2xl p-6 min-h-[400px]" variants={itemVariants}>
           <ActiveSection />
-        </div>
-      </div>
-    </div>
+        </motion.div>
+      </motion.div>
+    </motion.div>
   );
 }

@@ -1,5 +1,19 @@
 import { useState } from "react";
 import { Search, ChevronDown, ChevronRight, MessageCircle, BookOpen, Video, Mail } from "lucide-react";
+import { motion } from "framer-motion";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1, delayChildren: 0.2 },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100 } },
+};
 
 const faqs = [
   {
@@ -67,14 +81,18 @@ export default function Help() {
   );
 
   return (
-    <div className="max-w-4xl">
-      <div className="mb-8">
+    <motion.div 
+      className="max-w-4xl"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      <motion.div className="mb-8" variants={itemVariants}>
         <h1 className="text-[28px] font-semibold text-foreground tracking-tight mb-1">Help Center</h1>
         <p className="text-[14px] text-muted-foreground">Find answers, guides, and support resources</p>
-      </div>
+      </motion.div>
 
-      {/* Search */}
-      <div className="relative mb-8">
+      <motion.div className="relative mb-8" variants={itemVariants}>
         <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
         <input
           value={search}
@@ -82,13 +100,13 @@ export default function Help() {
           placeholder="Search for help articles..."
           className="w-full h-12 pl-12 pr-4 bg-card border border-border rounded-2xl text-[14px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all"
         />
-      </div>
+      </motion.div>
 
-      {/* Resources Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <motion.div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8" variants={itemVariants}>
         {resources.map((r) => (
-          <button
+          <motion.button
             key={r.label}
+            whileHover={{ scale: 1.02 }}
             className="bg-card border border-border rounded-2xl p-5 text-left hover:border-primary/20 transition-all group"
           >
             <div className={`w-10 h-10 rounded-xl ${r.bg} flex items-center justify-center mb-3`}>
@@ -96,12 +114,11 @@ export default function Help() {
             </div>
             <p className="text-[13px] font-semibold text-foreground">{r.label}</p>
             <p className="text-[11px] text-muted-foreground mt-0.5">{r.desc}</p>
-          </button>
+          </motion.button>
         ))}
-      </div>
+      </motion.div>
 
-      {/* FAQ */}
-      <div>
+      <motion.div variants={itemVariants}>
         <h2 className="text-[16px] font-semibold text-foreground mb-4">Frequently Asked Questions</h2>
         <div className="space-y-2">
           {filtered.length > 0 ? (
@@ -110,7 +127,7 @@ export default function Help() {
             <div className="text-center py-10 text-muted-foreground text-[13px]">No results found for "{search}"</div>
           )}
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

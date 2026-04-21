@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { LayoutDashboard, Building2, CalendarCheck, Users, DollarSign, X } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -5,6 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { users } from "@/lib/mockData";
+import { motion, AnimatePresence } from "framer-motion";
 
 const navItems = [
   { label: "Dashboard", path: "/", icon: LayoutDashboard },
@@ -16,26 +18,49 @@ const navItems = [
 
 export default function Sidebar({ open, onClose }) {
   const location = useLocation();
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
+  
+  useEffect(() => {
+    const handleThemeChange = () => {
+      setTheme(localStorage.getItem('theme') || 'light');
+    };
+    window.addEventListener('theme-changed', handleThemeChange);
+    return () => window.removeEventListener('theme-changed', handleThemeChange);
+  }, []);
+  
+  const logoSrc = theme === "dark" ? "/src/assets/logow.png" : "/src/assets/logod.png";
 
   return (
     <>
-      {open && (
-        <div className="fixed inset-0 bg-black/40 z-40 lg:hidden" onClick={onClose} />
-      )}
+      <AnimatePresence>
+        {open && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/40 z-40 lg:hidden"
+            onClick={onClose} 
+          />
+        )}
+      </AnimatePresence>
 
-      <aside
+      <motion.aside
+        initial={{ x: -300, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{ type: "spring", stiffness: 300, damping: 30 }}
         className={cn(
-          "fixed top-0 left-0 z-50 h-full w-64 bg-card border-r border-border flex flex-col transition-transform duration-300 lg:translate-x-0 lg:static lg:z-auto",
+          "fixed top-0 left-0 z-50 h-full w-64 bg-card border-r border-border flex flex-col lg:translate-x-0 lg:static lg:z-auto",
           open ? "translate-x-0" : "-translate-x-full"
         )}
       >
         {/* Logo */}
-        <div className="h-16 flex items-center justify-between px-5 border-b border-border">
+        <div className="h-20 flex items-center justify-between px-5 border-b border-border">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center shadow-sm">
-              <Building2 className="w-4 h-4 text-white" />
-            </div>
-             <span className="font-bold text-lg tracking-tight">STAYQ</span>
+            <img 
+              src={logoSrc} 
+              alt="StayQ Logo" 
+              className="max-h-28 w-40 object-contain" 
+            />
           </div>
           <button
             onClick={onClose}
@@ -108,7 +133,7 @@ export default function Sidebar({ open, onClose }) {
              </div>
            </div>
          </div>
-      </aside>
+      </motion.aside>
     </>
   );
 }

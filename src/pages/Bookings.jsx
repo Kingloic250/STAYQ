@@ -8,6 +8,17 @@ import BookingDetailModal from "@/components/bookings/BookingDetailModal";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { motion } from "framer-motion";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.05, delayChildren: 0.1 } },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100 } },
+};
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -39,14 +50,19 @@ export default function Bookings() {
 
   return (
     <TooltipProvider>
-      <div className="space-y-6">
-        <div>
+      <motion.div 
+        className="space-y-6"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <motion.div variants={itemVariants}>
           <h1 className="text-2xl font-bold tracking-tight">Bookings</h1>
           <p className="text-muted-foreground text-sm mt-1">Manage guest reservations</p>
-        </div>
+        </motion.div>
 
         {/* Filter tabs */}
-        <div className="flex gap-2 flex-wrap" role="tablist">
+        <motion.div className="flex gap-2 flex-wrap" role="tablist" variants={itemVariants}>
           {STATUS_OPTIONS.map((s) => (
             <button
               key={s}
@@ -70,12 +86,13 @@ export default function Bookings() {
               </Badge>
             </button>
           ))}
-        </div>
+        </motion.div>
 
-        <Card>
-          <CardHeader className="pb-3">
-            <DataTableSearch value={search} onChange={(v) => { setSearch(v); setPage(1); }} placeholder="Search by guest or property..." />
-          </CardHeader>
+        <motion.div variants={itemVariants}>
+          <Card>
+            <CardHeader className="pb-3">
+              <DataTableSearch value={search} onChange={(v) => { setSearch(v); setPage(1); }} placeholder="Search by guest or property..." />
+            </CardHeader>
           <CardContent className="p-0">
             <div className="min-h-[300px]">
               {paginated.length === 0 ? (
@@ -130,10 +147,11 @@ export default function Bookings() {
               />
             </div>
           </CardContent>
-        </Card>
+          </Card>
+        </motion.div>
 
         <BookingDetailModal open={!!selectedBooking} onClose={() => setSelectedBooking(null)} booking={selectedBooking} />
-      </div>
+      </motion.div>
     </TooltipProvider>
   );
 }

@@ -31,6 +31,9 @@ export const ThemeProvider = ({ children }) => {
       root.classList.remove('dark');
       root.style.colorScheme = 'light';
     }
+    
+    // Dispatch event for components to listen
+    window.dispatchEvent(new CustomEvent('theme-changed', { detail: { theme } }));
   }, [theme]);
 
   return (

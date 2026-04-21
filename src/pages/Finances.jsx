@@ -10,6 +10,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { motion } from "framer-motion";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.05, delayChildren: 0.1 } },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 100 } },
+};
 import { Separator } from "@/components/ui/separator";
 import { format } from "date-fns";
 import { DollarSign, TrendingUp, CreditCard, Download } from "lucide-react";
@@ -38,8 +49,13 @@ export default function Finances() {
   const paginated = filtered.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <motion.div 
+      className="space-y-6"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      <motion.div variants={itemVariants} className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Finances</h1>
           <p className="text-muted-foreground text-sm mt-1">Revenue and payment tracking</p>
@@ -48,15 +64,16 @@ export default function Finances() {
           <Download className="w-4 h-4 mr-2" />
           Export Data
         </Button>
-      </div>
+      </motion.div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <motion.div variants={itemVariants} className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <StatCard title="Total Revenue" value={`$${totalRevenue.toLocaleString()}`} icon={DollarSign} trend="+12.5%" trendUp subtitle="6-month total" />
         <StatCard title="Collected" value={`$${totalCompleted.toLocaleString()}`} icon={TrendingUp} trend={`${completedPayments.length} payments`} trendUp subtitle="completed" />
         <StatCard title="Pending" value={`$${totalPending.toLocaleString()}`} icon={CreditCard} subtitle={`${pendingPayments.length} awaiting`} />
-      </div>
+      </motion.div>
 
-      <Card>
+      <motion.div variants={itemVariants}>
+        <Card>
         <CardHeader className="pb-3">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <CardTitle className="text-base">Payment History</CardTitle>
@@ -108,7 +125,8 @@ export default function Finances() {
             />
           </div>
         </CardContent>
-      </Card>
-    </div>
+        </Card>
+      </motion.div>
+    </motion.div>
   );
 }
