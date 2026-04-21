@@ -28,7 +28,7 @@ export default function Sidebar({ open, onClose }) {
     return () => window.removeEventListener('theme-changed', handleThemeChange);
   }, []);
   
-  const logoSrc = theme === "dark" ? "/src/assets/logow.png" : "/src/assets/logod.png";
+  const logoSrc = theme === "dark" ? "/public/logow.png" : "/public/logod.png";
 
   return (
     <>
