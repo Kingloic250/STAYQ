@@ -1,18 +1,18 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { motion } from "framer-motion";
-import { Building2, Eye, EyeOff, Lock, Mail } from "lucide-react";
+import { Building2, Eye, EyeOff, Lock, Mail, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/context/AuthContext";
 
 const DEMO_ACCOUNTS = [
-  { label: "Buyer", email: "user@demo.com", password: "demo123", color: "bg-blue-500/15 text-blue-700 dark:text-blue-400 border-blue-500/30" },
-  { label: "Agent", email: "agent@demo.com", password: "demo123", color: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/30" },
-  { label: "Admin", email: "admin@demo.com", password: "demo123", color: "bg-amber-500/15 text-amber-700 dark:text-amber-400 border-amber-500/30" },
+  { label: "Buyer", email: "user@demo.com", password: "demo123", color: "bg-[oklch(0.65_0.25_330)]/15 text-[oklch(0.65_0.25_330)] border-[oklch(0.65_0.25_330)]/30" },
+  { label: "Agent", email: "agent@demo.com", password: "demo123", color: "bg-[oklch(0.65_0.22_280)]/15 text-[oklch(0.65_0.22_280)] border-[oklch(0.65_0.22_280)]/30" },
+  { label: "Admin", email: "admin@demo.com", password: "demo123", color: "bg-[oklch(0.7_0.2_200)]/15 text-[oklch(0.7_0.2_200)] border-[oklch(0.7_0.2_200)]/30" },
 ];
 
 export default function Login() {
@@ -46,80 +46,60 @@ export default function Login() {
   };
 
   return (
-    <div className="flex min-h-svh bg-muted/30">
-      <div className="hidden lg:flex lg:flex-1 bg-primary items-center justify-center p-12 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-5">
-          {Array.from({ length: 20 }).map((_, i) => (
-            <div
-              key={i}
-              className="absolute rounded-full border border-primary-foreground"
-              style={{
-                width: `${(i + 1) * 80}px`,
-                height: `${(i + 1) * 80}px`,
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-              }}
-            />
-          ))}
-        </div>
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6 }}
-          className="relative z-10 text-primary-foreground max-w-md"
-        >
-          <div className="mb-8 flex items-center gap-3">
-            <div className="flex size-12 items-center justify-center rounded-xl bg-primary-foreground/20">
-              <Building2 className="size-6 text-primary-foreground" />
-            </div>
-            <span className="text-2xl font-bold">RealHaven</span>
-          </div>
-          <h1 className="text-4xl font-bold leading-tight mb-4">
-            Find your perfect home with confidence
-          </h1>
-          <p className="text-lg text-primary-foreground/80 leading-relaxed">
-            Browse thousands of premium properties, connect with expert agents, and make your dream home a reality.
-          </p>
-          <div className="mt-8 grid grid-cols-3 gap-4 border-t border-primary-foreground/20 pt-8">
-            {[
-              { label: "Properties", value: "12,000+" },
-              { label: "Happy Clients", value: "3,500+" },
-              { label: "Expert Agents", value: "500+" },
-            ].map((stat) => (
-              <div key={stat.label}>
-                <div className="text-2xl font-bold">{stat.value}</div>
-                <div className="text-sm text-primary-foreground/70">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </motion.div>
+    <div className="relative min-h-screen overflow-hidden bg-background">
+      {/* Ambient gradient blobs */}
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-[oklch(0.65_0.25_330)] opacity-30 blur-3xl" />
+        <div className="absolute top-1/3 -right-32 h-[28rem] w-[28rem] rounded-full bg-[oklch(0.65_0.22_280)] opacity-30 blur-3xl" />
+        <div className="absolute -bottom-32 left-1/4 h-96 w-96 rounded-full bg-[oklch(0.7_0.2_200)] opacity-25 blur-3xl" />
       </div>
 
-      <div className="flex flex-1 items-center justify-center p-6 lg:p-12">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="w-full max-w-md"
-        >
-          <div className="mb-8 flex items-center gap-2 lg:hidden">
-            <div className="flex size-8 items-center justify-center rounded-lg bg-primary">
-              <Building2 className="size-4 text-primary-foreground" />
+      <div className="relative z-10 flex min-h-screen items-center justify-center px-4 py-10">
+        <div className="w-full max-w-md">
+          {/* Logo */}
+          <div className="mb-8 flex flex-col items-center text-center">
+            <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-[oklch(0.65_0.25_330)] to-[oklch(0.65_0.22_280)] shadow-lg shadow-[oklch(0.65_0.25_330)]/30">
+              <Building2 className="h-7 w-7 text-white" />
             </div>
-            <span className="text-xl font-bold">RealHaven</span>
+            <h1 className="text-3xl font-bold tracking-tight text-foreground">
+              Welcome back to RealHaven
+            </h1>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Sign in to continue to your account
+            </p>
           </div>
 
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold tracking-tight">Welcome back</h2>
-            <p className="text-muted-foreground mt-1">Sign in to your account to continue</p>
-          </div>
+          {/* Card */}
+          <div className="rounded-2xl border border-border/60 bg-card/70 p-6 shadow-2xl backdrop-blur-xl sm:p-8">
+            {/* Social */}
+            <div className="grid grid-cols-2 gap-3">
+              <Button variant="outline" type="button" className="h-11">
+                <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
+                  <path
+                    fill="currentColor"
+                    d="M21.35 11.1H12v3.2h5.35c-.23 1.4-1.66 4.1-5.35 4.1-3.22 0-5.85-2.66-5.85-5.95s2.63-5.95 5.85-5.95c1.83 0 3.06.78 3.76 1.45l2.57-2.47C16.78 4.05 14.62 3.1 12 3.1 6.98 3.1 2.9 7.18 2.9 12.2s4.08 9.1 9.1 9.1c5.25 0 8.73-3.69 8.73-8.88 0-.6-.06-1.05-.13-1.32z"
+                  />
+                </svg>
+                Google
+              </Button>
+              <Button variant="outline" type="button" className="h-11">
+                <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
+                  <path fill="currentColor" d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2z" />
+                </svg>
+                GitHub
+              </Button>
+            </div>
 
-          <Card className="mb-4 border-border/60">
-            <CardHeader className="pb-2 pt-4">
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Demo Accounts</p>
-            </CardHeader>
-            <CardContent className="pb-4">
+            <div className="my-6 flex items-center gap-3">
+              <Separator className="flex-1" />
+              <span className="text-xs uppercase tracking-wider text-muted-foreground">
+                or
+              </span>
+              <Separator className="flex-1" />
+            </div>
+
+            <div className="mb-6 space-y-3">
+              <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Demo Accounts</div>
               <div className="flex gap-2">
                 {DEMO_ACCOUNTS.map((acc) => (
                   <button
@@ -130,79 +110,117 @@ export default function Login() {
                   >
                     <Badge
                       variant="outline"
-                      className={`w-full cursor-pointer justify-center py-1 hover:opacity-90 transition-opacity ${acc.color}`}
+                      className={`w-full cursor-pointer justify-center py-1.5 hover:opacity-90 transition-opacity ${acc.color}`}
                     >
                       {acc.label}
                     </Badge>
                   </button>
                 ))}
               </div>
-              <p className="mt-2 text-xs text-muted-foreground">Password: <code className="rounded bg-muted px-1">demo123</code></p>
-            </CardContent>
-          </Card>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-1.5">
-              <Label htmlFor="email">Email</Label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="you@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="pl-9"
-                  required
-                />
-              </div>
             </div>
 
-            <div className="space-y-1.5">
-              <Label htmlFor="password">Password</Label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Enter password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="pl-9 pr-9"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            <form className="space-y-4" onSubmit={handleSubmit}>
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <div className="relative">
+                  <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="you@example.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    disabled={loading}
+                    className="h-11 pl-10"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="password">Password</Label>
+                  <a
+                    href="#"
+                    className="text-xs font-medium text-[oklch(0.7_0.2_330)] hover:underline"
+                  >
+                    Forgot password?
+                  </a>
+                </div>
+                <div className="relative">
+                  <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    disabled={loading}
+                    className="h-11 pl-10 pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((v) => !v)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
+                    aria-label="Toggle password visibility"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Checkbox id="remember" />
+                <Label
+                  htmlFor="remember"
+                  className="text-sm font-normal text-muted-foreground"
                 >
-                  {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-                </button>
+                  Remember me for 30 days
+                </Label>
               </div>
-            </div>
 
-            {error && (
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="text-sm text-destructive"
+              {error && (
+                <p className="text-sm text-destructive text-center">
+                  {error}
+                </p>
+              )}
+
+              <Button
+                type="submit"
+                disabled={loading}
+                className="h-11 w-full bg-gradient-to-r from-[oklch(0.65_0.25_330)] to-[oklch(0.65_0.22_280)] text-white shadow-lg shadow-[oklch(0.65_0.25_330)]/30 transition-transform hover:scale-[1.01] hover:opacity-95"
               >
-                {error}
-              </motion.p>
-            )}
+                {loading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Signing in...
+                  </>
+                ) : (
+                  "Sign in"
+                )}
+              </Button>
+            </form>
 
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Signing in..." : "Sign In"}
-            </Button>
-          </form>
+            <p className="mt-6 text-center text-sm text-muted-foreground">
+              New to RealHaven?{" "}
+              <Link
+                to="/"
+                className="font-medium text-foreground hover:underline"
+              >
+                Browse as guest
+              </Link>
+            </p>
+          </div>
 
-          <p className="mt-4 text-center text-sm text-muted-foreground">
-            Don't have an account?{" "}
-            <Link to="/" className="font-medium text-foreground underline-offset-4 hover:underline">
-              Browse as guest
-            </Link>
+          <p className="mt-6 text-center text-xs text-muted-foreground">
+            By continuing you agree to our Terms & Privacy Policy.
           </p>
-        </motion.div>
+        </div>
       </div>
     </div>
   );
