@@ -171,11 +171,13 @@ export default function Search() {
               )}
             </Button>
           </SheetTrigger>
-          <SheetContent>
-            <SheetHeader>
-              <SheetTitle>Filters</SheetTitle>
+          <SheetContent className="w-full sm:max-w-md p-0">
+            <SheetHeader className="border-b px-6 py-4">
+              <div className="flex items-center justify-between">
+                <SheetTitle className="text-lg">Filters</SheetTitle>
+              </div>
             </SheetHeader>
-            <div className="mt-6">
+            <div className="px-6 py-6">
               <Filters />
             </div>
           </SheetContent>
