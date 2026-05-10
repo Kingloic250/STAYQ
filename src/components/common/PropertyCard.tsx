@@ -9,12 +9,12 @@ import type { Property } from "@/data/mock";
 import { useAuth } from "@/context/AuthContext";
 
 const statusConfig: Record<string, { label: string; className: string }> = {
-  active: { label: "Active", className: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border-emerald-500/30" },
-  pending: { label: "Pending", className: "bg-amber-500/15 text-amber-700 dark:text-amber-400 border-amber-500/30" },
-  approved: { label: "Approved", className: "bg-blue-500/15 text-blue-700 dark:text-blue-400 border-blue-500/30" },
-  rejected: { label: "Rejected", className: "bg-destructive/15 text-destructive border-destructive/30" },
-  sold: { label: "Sold", className: "bg-secondary text-secondary-foreground border-border" },
-  draft: { label: "Draft", className: "bg-muted text-muted-foreground border-border" },
+  active: { label: "Active", className: "bg-emerald-500 text-white border-emerald-600" },
+  pending: { label: "Pending", className: "bg-amber-500 text-white border-amber-600" },
+  approved: { label: "Approved", className: "bg-blue-500 text-white border-blue-600" },
+  rejected: { label: "Rejected", className: "bg-red-500 text-white border-red-600" },
+  sold: { label: "Sold", className: "bg-gray-600 text-white border-gray-700" },
+  draft: { label: "Draft", className: "bg-gray-400 text-gray-800 border-gray-500" },
 };
 
 interface PropertyCardProps {
@@ -61,7 +61,7 @@ export function PropertyCard({ property, showActions = false, className }: Prope
               {statusCfg.label}
             </Badge>
             {property.featured && (
-              <Badge className="bg-primary/90 text-primary-foreground text-xs">Featured</Badge>
+              <Badge className="bg-amber-500 text-white border-amber-600 text-xs">Featured</Badge>
             )}
           </div>
           {user && (
